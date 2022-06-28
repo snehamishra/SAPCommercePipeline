@@ -5,7 +5,11 @@ pipeline {
     libraries {
         lib("shared-library@${params.LIBRARY_BRANCH}")
     }
-
+    agent {
+        node {
+            label 'Built-In Node'
+        }
+    }
     triggers {
         cron('H 18 * * *')
     }
