@@ -5,11 +5,7 @@ pipeline {
     libraries {
         lib("shared-library@${params.LIBRARY_BRANCH}")
     }
-    agent {
-        node {
-            label 'subordinate'
-        }
-    }
+
     triggers {
         cron('H 18 * * *')
     }
