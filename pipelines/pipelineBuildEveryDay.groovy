@@ -7,7 +7,7 @@ pipeline {
     }
     agent {
         node {
-            label 'Built-In Node'
+            label 'Built-In'
         }
     }
     triggers {
