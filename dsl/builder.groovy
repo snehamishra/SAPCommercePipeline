@@ -80,7 +80,7 @@ class JobParameters {
     static void setDatabaseUpdateMode(job) {
         job.with {
             parameters {
-                choiceParam('DB_UPDATE_MODE', ['NONE', 'UPDATE', 'INITIALIZE'], 'Possible options for databaseUpdateMode are NONE, UPDATE, and INITIALIZE')
+                choiceParam('DB_UPDATE_MODE', ['NONE', 'UPDATE'], 'Possible options for databaseUpdateMode are NONE, UPDATE, and INITIALIZE')
             }
         }
     }
@@ -96,7 +96,7 @@ class JobParameters {
     static void setStrategy(job) {
         job.with {
             parameters {
-                choiceParam('DEPLOY_STRATEGY', ['ROLLING_UPDATE', 'RECREATE'], 'Deployment strategy (ROLLING_UPDATE or RECREATE)')
+                choiceParam('DEPLOY_STRATEGY', ['ROLLING_UPDATE', 'RECREATE', 'BLUE/GREEN', 'BLUE_GREEN'], 'Deployment strategy (ROLLING_UPDATE or RECREATE or BLUE/GREEN)')
             }
         }
     }
