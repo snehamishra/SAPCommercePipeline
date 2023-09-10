@@ -1,11 +1,11 @@
 def call(commerceDir) {
-	echo "##### Goto spartacus folder #####"
+	echo "##### Building JS application #####"
 	sh "cd ${commerceDir}/js-storefront/spartacus-ssr"
-	echo "##### Install yarn #####"
+	echo "##### Executing [yarn, install] #####"
 	sh "yarn install"
-	echo "##### Execute build #####"
+	echo "##### Executing [yarn, build:ssr] #####"
 	sh "yarn run build:ssr"
-	echo "##### Commit dist folder #####"
+	echo "##### Executing dist folder commit #####"
 	sh "git commit dist && git push"
 	
 	
