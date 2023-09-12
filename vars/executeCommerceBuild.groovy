@@ -6,9 +6,9 @@ def call(commerceDir) {
 	echo "##### Executing [yarn, build:ssr] #####"
 	sh "cd ${commerceDir}/js-storefront/spartacus-ssr && ng update --all && yarn run build:ssr"
 	echo "##### Executing dist folder commit #####"
-	withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'githubCodeRepoCredentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {        
-        	sh "cd ${commerceDir}/js-storefront/spartacus-ssr/dist && git add . && git commit --author="sneha.mishra@bestandless.com.au" && git push"
-	}
+	//withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'githubCodeRepoCredentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {        
+        sh "cd ${commerceDir}/js-storefront/spartacus-ssr/dist && git add . && git commit --author="sneha mishra <sneha.mishra@bestandless.com.au>" && git push"
+	
 	//sh "cd ${commerceDir}/js-storefront/spartacus-ssr && git add dist/* && git commit dist && git push"
 	
 	
