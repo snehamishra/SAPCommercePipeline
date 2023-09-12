@@ -6,7 +6,7 @@ def call(commerceDir) {
 	echo "##### Executing [yarn, build:ssr] #####"
 	sh "cd ${commerceDir}/js-storefront/spartacus-ssr && ng update --all && yarn run build:ssr"
 	echo "##### Executing dist folder commit #####"
-	sh "cd ${commerceDir}/js-storefront/spartacus-ssr && git add dist/* && git commit dist && git push"
+	sh "cd ${commerceDir}/js-storefront/spartacus-ssr/dist && git add . && git commit && git push"
 	
 	
 	//addProperty(commerceDir, "solrserver.instances.default.autostart=false")
