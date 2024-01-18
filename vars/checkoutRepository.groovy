@@ -1,6 +1,6 @@
 def call(commerceDir, branch, projectRepository) {
     urlPrefix = "https://"
-    withCredentials([[$class: 'SSHUserPrivateKeyBinding', credentialsId: 'VishnuBitBucket',  keyFileVariable: 'PASSWORD']]) {        
+    withCredentials([[$class: 'SSHUserPrivateKeyBinding', credentialsId: 'VishnuBitBucket', usernameVariable: 'USERNAME', keyFileVariable: 'PASSWORD']]) {        
         repoDomainPart = projectRepository.substring(urlPrefix.size())
         repository = "https://$USERNAME:$PASSWORD@" + repoDomainPart
         echo "##### Checkout repository #####"
