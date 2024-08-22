@@ -134,7 +134,7 @@ JobParameters.setProjectName(buildEveryDay, projectRepoName)
 JobParameters.setSonarUrl(buildEveryDay, sonarUrl)
 JobParameters.setPackageToTest(buildEveryDay, packageToTest)
 
-def BuildEveryDayProduction = Job('BuildEveryDayProduction') {
+def buildEveryDayProduction = Job('BuildEveryDayProduction') {
     definition {
         triggers {
             cron('H 18 * * *')
@@ -154,13 +154,13 @@ def BuildEveryDayProduction = Job('BuildEveryDayProduction') {
         }
     }
 }
-JobParameters.setLogs(BuildEveryDayProduction)
-JobParameters.setLibraryBranchParam(BuildEveryDayProduction)
-JobParameters.setProjectRepository(BuildEveryDayProduction, projectRepo)
-JobParameters.setProjectTag(BuildEveryDayProduction, projectTag)
-JobParameters.setProjectName(BuildEveryDayProduction, projectRepoName)
-JobParameters.setSonarUrl(BuildEveryDayProduction, sonarUrl)
-JobParameters.setPackageToTest(BuildEveryDayProduction, packageToTest)
+JobParameters.setLogs(buildEveryDayProduction)
+JobParameters.setLibraryBranchParam(buildEveryDayProduction)
+JobParameters.setProjectRepository(buildEveryDayProduction, projectRepo)
+JobParameters.setProjectTag(buildEveryDayProduction, projectTag)
+JobParameters.setProjectName(buildEveryDayProduction, projectRepoName)
+JobParameters.setSonarUrl(buildEveryDayProduction, sonarUrl)
+JobParameters.setPackageToTest(buildEveryDayProduction, packageToTest)
 
 def packageAndDeploy = pipelineJob('PackageAndDeploy') {
     definition {
