@@ -134,6 +134,34 @@ JobParameters.setProjectName(buildEveryDay, projectRepoName)
 JobParameters.setSonarUrl(buildEveryDay, sonarUrl)
 JobParameters.setPackageToTest(buildEveryDay, packageToTest)
 
+def BuildEveryDayProduction = Job('BuildEveryDayProduction') {
+    definition {
+        triggers {
+            cron('H 18 * * *')
+        }
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("${pipelineRepo}")
+                        credentials("githubToolsCredentials")
+                    }
+                    branch('${LIBRARY_BRANCH}')
+                }
+                scriptPath('pipelines/pipelineBuildEveryDayProduction.groovy')
+                lightweight(false)
+            }
+        }
+    }
+}
+JobParameters.setLogs(BuildEveryDayProduction)
+JobParameters.setLibraryBranchParam(BuildEveryDayProduction)
+JobParameters.setProjectRepository(BuildEveryDayProduction, projectRepo)
+JobParameters.setProjectTag(BuildEveryDayProduction, projectTag)
+JobParameters.setProjectName(BuildEveryDayProduction, projectRepoName)
+JobParameters.setSonarUrl(BuildEveryDayProduction, sonarUrl)
+JobParameters.setPackageToTest(BuildEveryDayProduction, packageToTest)
+
 def packageAndDeploy = pipelineJob('PackageAndDeploy') {
     definition {
         cpsScm {
@@ -161,6 +189,7 @@ JobParameters.setProjectTag(packageAndDeploy, projectTag)
 JobParameters.setDatabaseUpdateMode(packageAndDeploy)
 JobParameters.setEnvironment(packageAndDeploy, environment)
 JobParameters.setStrategy(packageAndDeploy)
+
 
 // ****************************
 // *** LIST VIEW DEFINITION
