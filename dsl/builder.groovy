@@ -199,6 +199,7 @@ listView('Dev Pipelines') {
     jobs {
         names(
             'BuildEveryDay',
+            'BuildEveryDayProduction',
             'PackageAndDeploy',
         )
     }
