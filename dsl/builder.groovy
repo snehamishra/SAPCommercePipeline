@@ -134,31 +134,6 @@ JobParameters.setProjectName(buildEveryDay, projectRepoName)
 // JobParameters.setSonarUrl(buildEveryDay, sonarUrl)
 // JobParameters.setPackageToTest(buildEveryDay, packageToTest)
 
-def buildDailyProduction = Job('BuildEveryDayProduction') {
-    definition {
-        cpsScm {
-            scm {
-                git {
-                    remote {
-                        url("${pipelineRepo}")
-                        credentials("githubToolsCredentials")
-                    }
-                    branch('${LIBRARY_BRANCH}')
-                }
-                scriptPath('pipelines/pipelineBuildEveryDayProduction.groovy')
-                lightweight(false)
-            }
-        }
-    }
-}
-JobParameters.setLogs(buildDailyProduction)
-JobParameters.setLibraryBranchParam(buildDailyProduction)
-JobParameters.setProjectRepository(buildDailyProduction, projectRepo)
-JobParameters.setProjectTag(buildDailyProduction, projectTag)
-JobParameters.setProjectName(buildDailyProduction, projectRepoName)
-// JobParameters.setSonarUrl(buildEveryDayProduction, sonarUrl)
-// JobParameters.setPackageToTest(buildEveryDayProduction, packageToTest)
-
 def packageAndDeploy = pipelineJob('PackageAndDeploy') {
     definition {
         cpsScm {
@@ -196,7 +171,6 @@ listView('Dev Pipelines') {
     jobs {
         names(
             'BuildEveryDay',
-            'BuildEveryDayProduction',
             'PackageAndDeploy',
         )
     }
