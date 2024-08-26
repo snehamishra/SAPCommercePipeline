@@ -106,7 +106,7 @@ class JobParameters {
 // *** JOB DEFINITION
 // ****************************
 
-def buildEveryDay = pipelineJob('BuildEveryDay') {
+def buildProduction = pipelineJob('BuildEveryDay') {
     definition {
         triggers {
             cron('H 18 * * *')
@@ -120,19 +120,19 @@ def buildEveryDay = pipelineJob('BuildEveryDay') {
                     }
                     branch('${LIBRARY_BRANCH}')
                 }
-                scriptPath('pipelines/pipelineBuildEveryDayProduction.groovy')
+                scriptPath('pipelines/pipelineBuildEveryDay.groovy')
                 lightweight(false)
             }
         }
     }
 }
-JobParameters.setLogs(buildEveryDay)
-JobParameters.setLibraryBranchParam(buildEveryDay)
-JobParameters.setProjectRepository(buildEveryDay, projectRepo)
-JobParameters.setProjectTag(buildEveryDay, projectTag)
-JobParameters.setProjectName(buildEveryDay, projectRepoName)
-// JobParameters.setSonarUrl(buildEveryDay, sonarUrl)
-// JobParameters.setPackageToTest(buildEveryDay, packageToTest)
+JobParameters.setLogs(buildProduction)
+JobParameters.setLibraryBranchParam(buildProduction)
+JobParameters.setProjectRepository(buildProduction, projectRepo)
+JobParameters.setProjectTag(buildProduction, projectTag)
+JobParameters.setProjectName(buildProduction, projectRepoName)
+// JobParameters.setSonarUrl(buildProduction, sonarUrl)
+// JobParameters.setPackageToTest(buildProduction, packageToTest)
 
 def packageAndDeploy = pipelineJob('PackageAndDeploy') {
     definition {
