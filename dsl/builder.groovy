@@ -131,14 +131,11 @@ JobParameters.setLibraryBranchParam(buildEveryDay)
 JobParameters.setProjectRepository(buildEveryDay, projectRepo)
 JobParameters.setProjectTag(buildEveryDay, projectTag)
 JobParameters.setProjectName(buildEveryDay, projectRepoName)
-JobParameters.setSonarUrl(buildEveryDay, sonarUrl)
-JobParameters.setPackageToTest(buildEveryDay, packageToTest)
+// JobParameters.setSonarUrl(buildEveryDay, sonarUrl)
+// JobParameters.setPackageToTest(buildEveryDay, packageToTest)
 
 def buildEveryDayProduction = Job('BuildEveryDayProduction') {
     definition {
-        triggers {
-            cron('H 18 * * *')
-        }
         cpsScm {
             scm {
                 git {
@@ -159,8 +156,8 @@ JobParameters.setLibraryBranchParam(buildEveryDayProduction)
 JobParameters.setProjectRepository(buildEveryDayProduction, projectRepo)
 JobParameters.setProjectTag(buildEveryDayProduction, projectTag)
 JobParameters.setProjectName(buildEveryDayProduction, projectRepoName)
-JobParameters.setSonarUrl(buildEveryDayProduction, sonarUrl)
-JobParameters.setPackageToTest(buildEveryDayProduction, packageToTest)
+// JobParameters.setSonarUrl(buildEveryDayProduction, sonarUrl)
+// JobParameters.setPackageToTest(buildEveryDayProduction, packageToTest)
 
 def packageAndDeploy = pipelineJob('PackageAndDeploy') {
     definition {
