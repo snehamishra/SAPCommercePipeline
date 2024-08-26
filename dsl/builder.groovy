@@ -106,7 +106,7 @@ class JobParameters {
 // *** JOB DEFINITION
 // ****************************
 
-def buildProduction = pipelineJob('BuildEveryDay') {
+def buildProduction = pipelineJob('BuildProduction') {
     definition {
         triggers {
             cron('H 18 * * *')
