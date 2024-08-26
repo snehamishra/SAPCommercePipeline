@@ -134,7 +134,7 @@ JobParameters.setProjectName(buildEveryDay, projectRepoName)
 // JobParameters.setSonarUrl(buildEveryDay, sonarUrl)
 // JobParameters.setPackageToTest(buildEveryDay, packageToTest)
 
-def buildEveryDayProduction = Job('BuildEveryDayProduction') {
+def buildDailyProduction = Job('BuildEveryDayProduction') {
     definition {
         cpsScm {
             scm {
@@ -151,11 +151,11 @@ def buildEveryDayProduction = Job('BuildEveryDayProduction') {
         }
     }
 }
-JobParameters.setLogs(buildEveryDayProduction)
-JobParameters.setLibraryBranchParam(buildEveryDayProduction)
-JobParameters.setProjectRepository(buildEveryDayProduction, projectRepo)
-JobParameters.setProjectTag(buildEveryDayProduction, projectTag)
-JobParameters.setProjectName(buildEveryDayProduction, projectRepoName)
+JobParameters.setLogs(buildDailyProduction)
+JobParameters.setLibraryBranchParam(buildDailyProduction)
+JobParameters.setProjectRepository(buildDailyProduction, projectRepo)
+JobParameters.setProjectTag(buildDailyProduction, projectTag)
+JobParameters.setProjectName(buildDailyProduction, projectRepoName)
 // JobParameters.setSonarUrl(buildEveryDayProduction, sonarUrl)
 // JobParameters.setPackageToTest(buildEveryDayProduction, packageToTest)
 
