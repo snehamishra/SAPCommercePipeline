@@ -120,7 +120,7 @@ def buildEveryDay = pipelineJob('BuildEveryDay') {
                     }
                     branch('${LIBRARY_BRANCH}')
                 }
-                scriptPath('pipelines/pipelineBuildEveryDay.groovy')
+                scriptPath('pipelines/pipelineBuildEveryDayProduction.groovy')
                 lightweight(false)
             }
         }
