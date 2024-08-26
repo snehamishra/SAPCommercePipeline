@@ -162,6 +162,32 @@ JobParameters.setDatabaseUpdateMode(packageAndDeploy)
 JobParameters.setEnvironment(packageAndDeploy, environment)
 JobParameters.setStrategy(packageAndDeploy)
 
+def buildDailyProduction = pipelineJob('BuildDailyProduction') {
+    definition {
+        triggers {
+            cron('H 18 * * *')
+        }
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("${pipelineRepo}")
+                        credentials("githubToolsCredentials")
+                    }
+                    branch('${LIBRARY_BRANCH}')
+                }
+                scriptPath('pipelines/pipelineBuildEveryDay.groovy')
+                lightweight(false)
+            }
+        }
+    }
+}
+JobParameters.setLogs(buildDailyProduction)
+JobParameters.setLibraryBranchParam(buildDailyProduction)
+JobParameters.setProjectRepository(buildDailyProduction, projectRepo)
+JobParameters.setProjectTag(buildDailyProduction, projectTag)
+JobParameters.setProjectName(buildDailyProduction, projectRepoName)
+
 
 // ****************************
 // *** LIST VIEW DEFINITION
@@ -170,8 +196,9 @@ JobParameters.setStrategy(packageAndDeploy)
 listView('Dev Pipelines') {
     jobs {
         names(
-            'BuildEveryDay',
+            'BuildProduction',
             'PackageAndDeploy',
+            'BuildDailyProduction'
         )
     }
     columns {
