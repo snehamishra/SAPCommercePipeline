@@ -3,8 +3,8 @@ def call(commerceDir) {
 	sh "cd ${commerceDir}/js-storefront/spartacus-ssr"
 	echo "##### Executing [yarn, install] #####"
 	sh "yarn install"
-	echo "##### Executing [yarn, build:ssr-stg] #####"
-	sh "yarn run build:ssr-stg"
+	echo "##### Executing [yarn, build:ssr] #####"
+	sh "yarn run build:ssr"
 	echo "##### Executing dist folder commit #####"
 	sh "git commit dist && git push"	
 	//addProperty(commerceDir, "solrserver.instances.default.autostart=false")
