@@ -32,20 +32,20 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps{
-                script{
-                    deploymentCode = commerceCloudDeploy(codeNumber, "${params.DB_UPDATE_MODE}", "${params.ENVIRONMENT_ID}", "${params.DEPLOY_STRATEGY}")
-                    // commerceCloudDeployCheck(deploymentCode)
-                }
-            }
-        }
+        // stage('Deploy') {
+        //     steps{
+        //         script{
+        //             deploymentCode = commerceCloudDeploy(codeNumber, "${params.DB_UPDATE_MODE}", "${params.ENVIRONMENT_ID}", "${params.DEPLOY_STRATEGY}")
+        //             commerceCloudDeployCheck(deploymentCode)
+        //         }
+        //     }
+        // }
     }
 
     // post build actions
     post {
         failure {
-            echo "Issue with build package and deploy"
+            echo "Issue with build package"
         }
     }
 }
