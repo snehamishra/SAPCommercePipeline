@@ -226,7 +226,7 @@ listView('BNL Pipelines') {
     jobs {
         names(
             'BNLSTGBuildEveryDay',
-            'PackageAndDeploy',
+            'BNLSTGPackageAndDeploy',
             'BNLPRODBuildEveryDay',
             'BNLPRODPackageAndDeploy'
         )
