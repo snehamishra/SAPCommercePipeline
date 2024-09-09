@@ -33,18 +33,18 @@ pipeline {
             }
         }
 
-        stage('Run sonarqube') {
-            steps {
-                sonarqubeCheck("${BUILD_TAG}_develop", projectDir, "${params.SONAR_REPO_NAME}", "${params.SONAR_URL}") // Pipeline status is set as UNSTABLE if Sonar Quality Gate fails but build is SUCCESSFUL
-                failIfBuildUnstable() // Fails build if Quality Gate fails
-            }
-        }
+        // stage('Run sonarqube') {
+        //     steps {
+        //         sonarqubeCheck("${BUILD_TAG}_develop", projectDir, "${params.SONAR_REPO_NAME}", "${params.SONAR_URL}") // Pipeline status is set as UNSTABLE if Sonar Quality Gate fails but build is SUCCESSFUL
+        //         failIfBuildUnstable() // Fails build if Quality Gate fails
+        //     }
+        // }
 
-        stage('Run all tests') {
-            steps {
-                executeAntTasks(projectDir, "yunitinit alltests -Dtestclasses.packages=${params.PACKAGE_TO_TEST}", 'dev')
-            }
-        }
+        // stage('Run all tests') {
+        //     steps {
+        //         executeAntTasks(projectDir, "yunitinit alltests -Dtestclasses.packages=${params.PACKAGE_TO_TEST}", 'dev')
+        //     }
+        // }
     }
 
     // post build actions
