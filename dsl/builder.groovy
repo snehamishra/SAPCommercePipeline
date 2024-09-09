@@ -202,7 +202,7 @@ def bnlPRODPackageAndDeploy = pipelineJob('BNLPRODPackageAndDeploy') {
                     }
                     branch('${LIBRARY_BRANCH}')
                 }
-                scriptPath('pipelines/pipelinePackageAndDeploy.groovy')
+                scriptPath('pipelines/pipelinePackageAndDeployProduction.groovy')
                 lightweight(false)
             }
         }

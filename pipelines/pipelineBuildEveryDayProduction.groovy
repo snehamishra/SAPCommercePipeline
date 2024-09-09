@@ -22,7 +22,7 @@ pipeline {
     options {
         skipDefaultCheckout(true) // No more 'Declarative: Checkout' stage
     }
-    
+
     stages {
         stage('Prepare') {
             steps {
@@ -58,9 +58,9 @@ pipeline {
     }
 
     // post build actions
-    post {
-        always {
-            junit "${relativeJunitLogsPath}/*.xml"
-        }
-    }
+    // post {
+    //     always {
+    //         junit "${relativeJunitLogsPath}/*.xml"
+    //     }
+    // }
 }
