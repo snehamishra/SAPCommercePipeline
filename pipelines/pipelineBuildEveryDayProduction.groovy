@@ -13,9 +13,9 @@ pipeline {
     tools 
         {nodejs "nodejs"
     }
-    triggers {
-        cron('H 18 * * *')
-    }
+    // triggers {
+    //     cron('H 18 * * *')
+    // }
     options {
         skipDefaultCheckout(true) // No more 'Declarative: Checkout' stage
     }
@@ -55,9 +55,9 @@ pipeline {
     }
 
     // post build actions
-    post {
-        always {
-            junit "${relativeJunitLogsPath}/*.xml"
-        }
-    }
+    // post {
+    //     always {
+    //         junit "${relativeJunitLogsPath}/*.xml"
+    //     }
+    // }
 }
