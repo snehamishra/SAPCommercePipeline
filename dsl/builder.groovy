@@ -24,7 +24,7 @@ class JobParameters {
     static void setLibraryBranchParam(job) {
         job.with {
             parameters {
-                stringParam('LIBRARY_BRANCH', 'master', 'Library branch name')
+                stringParam('LIBRARY_BRANCH', 'main', 'Library branch name')
             }
         }
     }
