@@ -106,7 +106,7 @@ class JobParameters {
 // *** JOB DEFINITION
 // ****************************
 
-def buildEveryDay = pipelineJob('BuildEveryDay') {
+def hsSTGBuildEveryDay = pipelineJob('HSSTGBuildEveryDay') {
     definition {
         triggers {
             cron('H 18 * * *')
@@ -126,15 +126,15 @@ def buildEveryDay = pipelineJob('BuildEveryDay') {
         }
     }
 }
-JobParameters.setLogs(buildEveryDay)
-JobParameters.setLibraryBranchParam(buildEveryDay)
-JobParameters.setProjectRepository(buildEveryDay, projectRepo)
-JobParameters.setProjectTag(buildEveryDay, projectTag)
-JobParameters.setProjectName(buildEveryDay, projectRepoName)
-// JobParameters.setSonarUrl(buildEveryDay, sonarUrl)
-// JobParameters.setPackageToTest(buildEveryDay, packageToTest)
+JobParameters.setLogs(hsSTGBuildEveryDay)
+JobParameters.setLibraryBranchParam(hsSTGBuildEveryDay)
+JobParameters.setProjectRepository(hsSTGBuildEveryDay, projectRepo)
+JobParameters.setProjectTag(hsSTGBuildEveryDay, projectTag)
+JobParameters.setProjectName(hsSTGBuildEveryDay, projectRepoName)
+// JobParameters.setSonarUrl(hsSTGBuildEveryDay, sonarUrl)
+// JobParameters.setPackageToTest(hsSTGBuildEveryDay, packageToTest)
 
-def packageAndDeploy = pipelineJob('PackageAndDeploy') {
+def hsSTGPackageAndDeploy = pipelineJob('HSSTGPackageAndDeploy') {
     definition {
         cpsScm {
             scm {
@@ -154,15 +154,15 @@ def packageAndDeploy = pipelineJob('PackageAndDeploy') {
 }
 
 
-JobParameters.setLogs(packageAndDeploy)
-JobParameters.setLibraryBranchParam(packageAndDeploy)
-JobParameters.setBuildName(packageAndDeploy, buildName)
-JobParameters.setProjectTag(packageAndDeploy, projectTag)
-JobParameters.setDatabaseUpdateMode(packageAndDeploy)
-JobParameters.setEnvironment(packageAndDeploy, environment)
-JobParameters.setStrategy(packageAndDeploy)
+JobParameters.setLogs(hsSTGPackageAndDeploy)
+JobParameters.setLibraryBranchParam(hsSTGPackageAndDeploy)
+JobParameters.setBuildName(hsSTGPackageAndDeploy, buildName)
+JobParameters.setProjectTag(hsSTGPackageAndDeploy, projectTag)
+JobParameters.setDatabaseUpdateMode(hsSTGPackageAndDeploy)
+JobParameters.setEnvironment(hsSTGPackageAndDeploy, environment)
+JobParameters.setStrategy(hsSTGPackageAndDeploy)
 
-def buildDailyProduction = pipelineJob('BuildDailyProduction') {
+def hsPRODBuildEveryDay = pipelineJob('HSPRODBuildEveryDay') {
     definition {
         triggers {
             cron('H 18 * * *')
@@ -182,23 +182,51 @@ def buildDailyProduction = pipelineJob('BuildDailyProduction') {
         }
     }
 }
-JobParameters.setLogs(buildDailyProduction)
-JobParameters.setLibraryBranchParam(buildDailyProduction)
-JobParameters.setProjectRepository(buildDailyProduction, projectRepo)
-JobParameters.setProjectTag(buildDailyProduction, projectTag)
-JobParameters.setProjectName(buildDailyProduction, projectRepoName)
+JobParameters.setLogs(hsPRODBuildEveryDay)
+JobParameters.setLibraryBranchParam(hsPRODBuildEveryDay)
+JobParameters.setProjectRepository(hsPRODBuildEveryDay, projectRepo)
+JobParameters.setProjectTag(hsPRODBuildEveryDay, projectTag)
+JobParameters.setProjectName(hsPRODBuildEveryDay, projectRepoName)
 
+def hsProdPackageAndDeploy = pipelineJob('HSPRODPackageAndDeploy') {
+    definition {
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("${pipelineRepo}")
+                        credentials("githubToolsCredentials")
+                        credentials("commerceCloudCredentials")
+                    }
+                    branch('${LIBRARY_BRANCH}')
+                }
+                scriptPath('pipelines/pipelinePackageAndDeploy.groovy')
+                lightweight(false)
+            }
+        }
+    }
+}
+
+
+JobParameters.setLogs(hsProdPackageAndDeploy)
+JobParameters.setLibraryBranchParam(hsProdPackageAndDeploy)
+JobParameters.setBuildName(hsProdPackageAndDeploy, buildName)
+JobParameters.setProjectTag(hsProdPackageAndDeploy, projectTag)
+JobParameters.setDatabaseUpdateMode(hsProdPackageAndDeploy)
+JobParameters.setEnvironment(hsProdPackageAndDeploy, environment)
+JobParameters.setStrategy(hsProdPackageAndDeploy)
 
 // ****************************
 // *** LIST VIEW DEFINITION
 // ****************************
 
-listView('Dev Pipelines') {
+listView('HS Pipelines') {
     jobs {
         names(
-            'BuildEveryDay',
-            'PackageAndDeploy',
-            'BuildDailyProduction'
+            'HSSTGBuildEveryDay',
+            'HSSTGPackageAndDeploy',
+            'HSPRODBuildEveryDay',
+            'HSPRODPackageAndDeploy'
         )
     }
     columns {

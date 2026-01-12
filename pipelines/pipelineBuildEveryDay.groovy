@@ -55,9 +55,9 @@ pipeline {
     }
 
     // post build actions
-    post {
-        always {
-            junit "${relativeJunitLogsPath}/*.xml"
-        }
-    }
+    // post {
+    //     always {
+    //         junit "${relativeJunitLogsPath}/*.xml"
+    //     }
+    // }
 }
