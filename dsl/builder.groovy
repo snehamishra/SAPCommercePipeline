@@ -5,8 +5,7 @@ def sonarUrl = '${SONAR_URL}'
 def projectRepoName = '${SONAR_REPO_NAME}'
 def packageToTest = '${PACKAGE_TO_TEST}'
 
-def subscriptionId = '${SUBSCRIPTION_ID}'
-def token = '${CLOUD_API_TOKEN}'
+def subscriptionCode = '${SUBSCRIPTION_CODE}'
 def buildName = '${BUILD_NAME}'
 def environment = '${ENVIRONMENT_ID}'
 
@@ -142,7 +141,6 @@ def packageAndDeploy = pipelineJob('PackageAndDeploy') {
                     remote {
                         url("${pipelineRepo}")
                         credentials("githubToolsCredentials")
-                        credentials("commerceCloudCredentials")
                     }
                     branch('${LIBRARY_BRANCH}')
                 }
