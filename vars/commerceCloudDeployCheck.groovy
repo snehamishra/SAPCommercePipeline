@@ -1,8 +1,11 @@
 def call(deployCode) {
     script {
         while (true) {
-          wrap([$class: 'MaskPasswordsBuildWrapper', varPasswordPairs: [[password: "${token}", var: 'PASSWD']]]) {
-              result = sh (script: "curl --location --request GET 'https://portalapi.commerce.ondemand.com/v2/subscriptions/${subscriptionId}/deployments/$deployCode' --header 'Authorization: Bearer ${token}'",returnStdout:true)
+          def accessToken = getCommerceCloudToken()
+          withCredentials([string(credentialsId: 'commerceCloudSubscriptionCode', variable: 'subscriptionCode')]) {
+              wrap([$class: 'MaskPasswordsBuildWrapper', varPasswordPairs: [[password: "${accessToken}", var: 'PASSWD']]]) {
+                  result = sh (script: "curl --location --request GET 'https://portalapi.commerce.ondemand.com/v2/subscriptions/${subscriptionCode}/deployments/$deployCode' --header 'x-approuter-authorization: Bearer ${accessToken}'",returnStdout:true)
+              }
           }
           echo "$result"
           statusResult = readJSON text: "$result"

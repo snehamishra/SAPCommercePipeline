@@ -1,8 +1,9 @@
 def call(codeNumber) {
     script {
         while (true) {
-          withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'commerceCloudCredentials', usernameVariable: 'subscriptionId', passwordVariable: 'token']]) {
-              result = sh (script: "curl --location --request GET 'https://portalapi.commerce.ondemand.com/v2/subscriptions/${subscriptionId}/builds/$codeNumber' --header 'Authorization: Bearer ${token}'",returnStdout:true)
+          def accessToken = getCommerceCloudToken()
+          withCredentials([string(credentialsId: 'commerceCloudSubscriptionCode', variable: 'subscriptionCode')]) {
+              result = sh (script: "curl --location --request GET 'https://portalapi.commerce.ondemand.com/v2/subscriptions/${subscriptionCode}/builds/$codeNumber' --header 'x-approuter-authorization: Bearer ${accessToken}'",returnStdout:true)
           }
           echo "$result"
           statusResult = readJSON text: "$result"
