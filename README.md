@@ -7,7 +7,9 @@ This project provides a sample of how to create a generic template for Jenkins C
 - add Global Shared Library - with name "shared-library"
 - add Node - configure node with label "subordinate"
 - create credentials to github repository with id "githubCodeRepoCredentials"
-- create credentials to SAP Commerce Cloud with id commerceCloudCredentials (for building and deploying using APIs to SAP Commerce Cloud; with username as subscription ID and password as API token)
+- create Secret Text credential with id `commerceCloudSubscriptionCode` (SAP Commerce Cloud subscription code)
+- create Secret Text credential with id `commerceCloudClientId` (OAuth2 client ID for SAP Commerce Cloud API)
+- create Secret Text credential with id `commerceCloudClientSecret` (OAuth2 client secret for SAP Commerce Cloud API)
 - create credentials for Sonar and add it to Sonar Plugin
 
 ### Jenkins Plugin
