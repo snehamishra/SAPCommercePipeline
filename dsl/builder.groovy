@@ -194,9 +194,7 @@ JobParameters.setProjectName(buildDailyProduction, projectRepoName)
 listView('Dev Pipelines') {
     jobs {
         names(
-            'BuildEveryDay',
-            'PackageAndDeploy',
-            'BuildDailyProduction'
+            'PackageAndDeploy'
         )
     }
     columns {
