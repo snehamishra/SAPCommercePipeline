@@ -1,18 +1,57 @@
 def call(branch, buildName) {
-    echo "##### Initiate Build to SAP Commerce Cloud Environment #####"
-    //deploy tag 
-    script{
-        withCredentials([
-            string(credentialsId: 'commerceCloudSubscriptionCode', variable: 'subscriptionCode'),
-            string(credentialsId: 'commerceCloudClientId', variable: 'COMMERCE_CLOUD_CLIENT_ID'),
-            string(credentialsId: 'commerceCloudClientSecret', variable: 'COMMERCE_CLOUD_CLIENT_SECRET')
-        ]) {
-            def token = getCommerceCloudToken()
-            build = sh (script: "curl --location --request POST 'https://portalapi.commerce.ondemand.com/v2/subscriptions/${subscriptionCode}/builds' --header 'Content-Type: application/json' --header 'x-approuter-authorization: Bearer ${token}' --data-raw '{\"branch\": \"${branch}\",\"name\": \"${buildName}\"}'",returnStdout:true)
-            echo "$build"
-            build_result = readJSON text: "$build"
-            code_number = build_result["code"]
-            return code_number
+
+    echo "=============================="
+    echo ">>> STEP 2: BUILD INITIATED"
+    echo ">>> branch: ${branch}"
+    echo ">>> buildName: ${buildName}"
+    echo "=============================="
+
+    def token = getCommerceCloudToken()
+
+    withCredentials([
+            string(credentialsId: 'commerceCloudSubscriptionCode',
+                    variable: 'SUBSCRIPTION_CODE')
+    ]) {
+
+        echo ">>> STEP 3: CALLING BUILD API"
+        echo ">>> Using subscriptionCode: ${SUBSCRIPTION_CODE}"
+
+        def responseFile = "build_response.json"
+
+        def status = sh(
+                script: """
+                curl --compressed -sS \
+                -o ${responseFile} \
+                -w "%{http_code}" \
+                --location --request POST \
+                "https://portalapi.commerce.ondemand.com/v2/subscriptions/${SUBSCRIPTION_CODE}/builds" \
+                --header "Content-Type: application/json" \
+                --header "Accept: application/json" \
+                --header "x-approuter-authorization: Bearer ${token}" \
+                --data-raw '{"branch":"${branch}","name":"${buildName}"}'
+                """,
+                returnStdout: true
+        ).trim()
+
+        def body = readFile(responseFile).trim()
+
+        echo "=============================="
+        echo "HTTP STATUS = ${status}"
+        echo "BODY:"
+        echo body
+        echo "=============================="
+
+        if (!(status in ["200", "201", "202"])) {
+            error("Build API FAILED with HTTP ${status}")
         }
+
+        def json = readJSON text: body
+
+        echo "=============================="
+        echo "BUILD TRIGGERED SUCCESSFULLY"
+        echo "CODE = ${json.code}"
+        echo "=============================="
+
+        return json.code
     }
-}  
+}
