@@ -1,4 +1,5 @@
-def call(buildName, dbUpdateMode, environmentId, strategy) {
+def call(buildCode, dbUpdateMode, environmentId, strategy) {
+
     echo "##### Initiate Deployment to SAP Commerce Cloud Environment #####"
     //deploy tag 
     script{
@@ -9,5 +10,18 @@ def call(buildName, dbUpdateMode, environmentId, strategy) {
             deploy_code = deploy_result["code"]
             return deploy_code
         }
+
+        if (!body.startsWith("{")) {
+            error("Deployment API did not return valid JSON:\n${body}")
+        }
+
+        def json = readJSON text: body
+
+        echo "=============================="
+        echo "DEPLOYMENT TRIGGERED SUCCESSFULLY"
+        echo "DEPLOYMENT CODE = ${json.code}"
+        echo "=============================="
+
+        return json.code
     }
 }

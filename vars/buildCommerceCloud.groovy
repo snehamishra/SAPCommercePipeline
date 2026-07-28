@@ -9,5 +9,14 @@ def call(branch, buildName) {
             code_number = build_result["code"]
             return code_number
         }
+
+        def json = readJSON text: body
+
+        echo "=============================="
+        echo "BUILD TRIGGERED SUCCESSFULLY"
+        echo "CODE = ${json.code}"
+        echo "=============================="
+
+        return json.code
     }
-}  
+}
