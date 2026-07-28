@@ -1,48 +1,13 @@
 def call(branch, buildName) {
-
-    echo "=============================="
-    echo ">>> STEP 2: BUILD INITIATED"
-    echo ">>> branch: ${branch}"
-    echo ">>> buildName: ${buildName}"
-    echo "=============================="
-
-    def token = getCommerceCloudToken()
-
-    withCredentials([
-            string(credentialsId: 'commerceCloudSubscriptionCode',
-                    variable: 'SUBSCRIPTION_CODE')
-    ]) {
-
-        echo ">>> STEP 3: CALLING BUILD API"
-        echo ">>> Using subscriptionCode: ${SUBSCRIPTION_CODE}"
-
-        def responseFile = "build_response.json"
-
-        def status = sh(
-                script: """
-                curl --compressed -sS \
-                -o ${responseFile} \
-                -w "%{http_code}" \
-                --location --request POST \
-                "https://portalapi.commerce.ondemand.com/v2/subscriptions/${SUBSCRIPTION_CODE}/builds" \
-                --header "Content-Type: application/json" \
-                --header "Accept: application/json" \
-                --header "x-approuter-authorization: Bearer ${token}" \
-                --data-raw '{"branch":"${branch}","name":"${buildName}"}'
-                """,
-                returnStdout: true
-        ).trim()
-
-        def body = readFile(responseFile).trim()
-
-        echo "=============================="
-        echo "HTTP STATUS = ${status}"
-        echo "BODY:"
-        echo body
-        echo "=============================="
-
-        if (!(status in ["200", "201", "202"])) {
-            error("Build API FAILED with HTTP ${status}")
+    echo "##### Initiate Build to SAP Commerce Cloud Environment #####"
+    //deploy tag 
+    script{
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'commerceCloudCredentials', usernameVariable: 'subscriptionId', passwordVariable: 'token']]) {
+            build = sh (script: "curl --location --request POST 'https://portalapi.commerce.ondemand.com/v2/subscriptions/${subscriptionId}/builds' --header 'Content-Type: application/json' --header 'Authorization: Bearer ${token}' --header 'Content-Type: text/plain' --data-raw '{\"branch\": \"${branch}\",\"name\": \"${buildName}\"}'",returnStdout:true)
+            echo "$build"
+            build_result = readJSON text: "$build"
+            code_number = build_result["code"]
+            return code_number
         }
 
         def json = readJSON text: body

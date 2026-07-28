@@ -1,46 +1,14 @@
 def call(buildCode, dbUpdateMode, environmentId, strategy) {
 
     echo "##### Initiate Deployment to SAP Commerce Cloud Environment #####"
-
-    withCredentials([
-            string(credentialsId: 'commerceCloudSubscriptionCode',
-                    variable: 'SUBSCRIPTION_CODE')
-    ]) {
-
-        def token = getCommerceCloudToken()
-
-        def responseFile = "deploy_response.json"
-
-        def status = sh(
-                script: """
-            curl --compressed -sS \
-            -o ${responseFile} \
-            -w "%{http_code}" \
-            --location --request POST \
-            "https://portalapi.commerce.ondemand.com/v2/subscriptions/${SUBSCRIPTION_CODE}/deployments" \
-            --header "Content-Type: application/json" \
-            --header "Accept: application/json" \
-            --header "x-approuter-authorization: Bearer ${token}" \
-            --data-raw '{
-              "buildCode":"${buildCode}",
-              "databaseUpdateMode":"${dbUpdateMode}",
-              "environmentCode":"${environmentId}",
-              "strategy":"${strategy}"
-            }'
-            """,
-                returnStdout: true
-        ).trim()
-
-        def body = readFile(responseFile).trim()
-
-        echo "=============================="
-        echo "DEPLOY HTTP STATUS = ${status}"
-        echo "DEPLOY RESPONSE:"
-        echo body
-        echo "=============================="
-
-        if (!(status in ["200", "201", "202"])) {
-            error("Deployment API FAILED with HTTP ${status}")
+    //deploy tag 
+    script{
+        withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'commerceCloudCredentials', usernameVariable: 'subscriptionId', passwordVariable: 'token']]) {
+            deploy = sh (script: "curl --location --request POST 'https://portalapi.commerce.ondemand.com/v2/subscriptions/${subscriptionId}/deployments' --header 'Content-Type: application/json' --header 'Authorization: Bearer ${token}' --header 'Content-Type: text/plain' --data-raw '{\"buildCode\": \"${buildName}\",\"databaseUpdateMode\": \"${dbUpdateMode}\",\"environmentCode\": \"${environmentId}\",\"strategy\": \"${strategy}\"}'",returnStdout:true)
+            echo "$deploy"
+            deploy_result = readJSON text: "$deploy"
+            deploy_code = deploy_result["code"]
+            return deploy_code
         }
 
         if (!body.startsWith("{")) {
