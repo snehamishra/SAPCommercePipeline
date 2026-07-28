@@ -5,8 +5,7 @@ def sonarUrl = '${SONAR_URL}'
 def projectRepoName = '${SONAR_REPO_NAME}'
 def packageToTest = '${PACKAGE_TO_TEST}'
 
-def subscriptionId = '${SUBSCRIPTION_ID}'
-def token = '${CLOUD_API_TOKEN}'
+def subscriptionCode = '${SUBSCRIPTION_CODE}'
 def buildName = '${BUILD_NAME}'
 def environment = '${ENVIRONMENT_ID}'
 
@@ -24,7 +23,7 @@ class JobParameters {
     static void setLibraryBranchParam(job) {
         job.with {
             parameters {
-                stringParam('LIBRARY_BRANCH', 'master', 'Library branch name')
+                stringParam('LIBRARY_BRANCH', 'main', 'Library branch name')
             }
         }
     }
@@ -142,7 +141,6 @@ def bnlSTGPackageAndDeploy = pipelineJob('BNLSTGPackageAndDeploy') {
                     remote {
                         url("${pipelineRepo}")
                         credentials("githubToolsCredentials")
-                        credentials("commerceCloudCredentials")
                     }
                     branch('${LIBRARY_BRANCH}')
                 }
@@ -202,7 +200,7 @@ def bnlPRODPackageAndDeploy = pipelineJob('BNLPRODPackageAndDeploy') {
                     }
                     branch('${LIBRARY_BRANCH}')
                 }
-                scriptPath('pipelines/pipelinePackageAndDeploy.groovy')
+                scriptPath('pipelines/pipelinePackageAndDeployProduction.groovy')
                 lightweight(false)
             }
         }
@@ -218,6 +216,33 @@ JobParameters.setDatabaseUpdateMode(bnlPRODPackageAndDeploy)
 JobParameters.setEnvironment(bnlPRODPackageAndDeploy, environment)
 JobParameters.setStrategy(bnlPRODPackageAndDeploy)
 
+def buildDailyProduction = pipelineJob('BuildDailyProduction') {
+    definition {
+        triggers {
+            cron('H 18 * * *')
+        }
+        cpsScm {
+            scm {
+                git {
+                    remote {
+                        url("${pipelineRepo}")
+                        credentials("githubToolsCredentials")
+                    }
+                    branch('${LIBRARY_BRANCH}')
+                }
+                scriptPath('pipelines/pipelineBuildEveryDayProduction.groovy')
+                lightweight(false)
+            }
+        }
+    }
+}
+JobParameters.setLogs(buildDailyProduction)
+JobParameters.setLibraryBranchParam(buildDailyProduction)
+JobParameters.setProjectRepository(buildDailyProduction, projectRepo)
+JobParameters.setProjectTag(buildDailyProduction, projectTag)
+JobParameters.setProjectName(buildDailyProduction, projectRepoName)
+
+
 // ****************************
 // *** LIST VIEW DEFINITION
 // ****************************
@@ -226,7 +251,7 @@ listView('BNL Pipelines') {
     jobs {
         names(
             'BNLSTGBuildEveryDay',
-            'PackageAndDeploy',
+            'BNLSTGPackageAndDeploy',
             'BNLPRODBuildEveryDay',
             'BNLPRODPackageAndDeploy'
         )
