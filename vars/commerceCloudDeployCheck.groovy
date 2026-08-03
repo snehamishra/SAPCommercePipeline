@@ -7,18 +7,18 @@ def call(deployCode) {
           echo "$result"
           statusResult = readJSON text: "$result"
 
-            if("DEPLOYED".equals(statusResult["status"])) {
-                break;
-            }
+          if("DEPLOYED".equals(statusResult["status"])) {
+            break;
+          }
 
-            if("FAIL".equals(statusResult["status"])) {
-                error("Deployment was not completed successfully on SAP Commerce Cloud")
-            }
+          if("FAIL".equals(statusResult["status"])) {
+            error("Deployment was not completed successfully on SAP Commerce Cloud")
+          }
 
-            sh('sleep 120s')
+          sh('sleep 120s')
 
         }
 
         echo "Commerce Cloud Deploy Complete"
     }
-}
+}  
